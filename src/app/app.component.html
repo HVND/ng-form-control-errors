@@ -1,0 +1,25 @@
+<div class="container">
+    <form [formGroup]="formGroup">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" formControlName="email">
+            <control-errors [control]="formGroup.controls['email']"
+                            [errors]="{required: 'The field is required to fill!', email: 'Invalid email address!'}">
+                <ng-template let-message>
+                    <small style="color:red">{{ message }}</small>
+                </ng-template>
+            </control-errors>
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone number</label>
+            <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber">
+            <control-errors [control]="formGroup.controls['phoneNumber']"
+                            [errors]="{required: 'The field is required to fill!', pattern: 'Invalid phone number! (e.g. +91 (123) 456-7890)'}">
+                <ng-template let-message>
+                    <small style="color:red">{{ message }}</small>
+                </ng-template>
+            </control-errors>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="formGroup.invalid">Submit</button>
+    </form>
+</div>
