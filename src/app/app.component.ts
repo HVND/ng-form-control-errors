@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'app-root',
@@ -10,25 +10,19 @@ export class AppComponent implements OnInit {
 
     formGroup: FormGroup;
 
-    constructor(private fb: FormBuilder) {
-    }
-
     ngOnInit() {
-        this.formGroup = this.fb.group({
-            email: [
-                '',
-                Validators.compose([
+        this.formGroup = new FormGroup(
+            {
+                email: new FormControl('', [
                     Validators.required,
                     Validators.email,
-                ])
-            ],
-            phoneNumber: [
-                '',
-                Validators.compose([
+                ]),
+                phoneNumber: new FormControl('', [
                     Validators.required,
                     Validators.pattern(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/),
-                ])
-            ]
-        });
+                ]),
+            },
+            // {updateOn: 'blur'}
+        );
     }
 }

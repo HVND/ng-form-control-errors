@@ -40,7 +40,7 @@ export class NgFormControlErrorsComponent implements OnInit {
     detectErrors(): void {
         this.error = '';
 
-        if (this.control.errors && (!!this.control.value || this.control.dirty)) {
+        if (this.control.errors && (!!this.control.value || (this.control.dirty || this.control.touched))) {
             for (let err in this.control.errors) {
                 if (this.control.errors.hasOwnProperty(err)) {
                     if (this.errors[err]) {
@@ -50,6 +50,6 @@ export class NgFormControlErrorsComponent implements OnInit {
             }
         }
 
-        this.cd.detectChanges();
+        this.cd.markForCheck();
     }
 }
