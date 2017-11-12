@@ -9,13 +9,21 @@ import {
 } from '@angular/core';
 import {FormControl} from "@angular/forms";
 
-type Errors = { [error: string]: string };
+export interface Error {
+    name: string;
+    message: string;
+}
+
+export type Errors = { [error: string]: string };
 
 @Component({
-    selector: 'control-errors',
+    selector: 'control-errors,[control-errors]',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <ng-container messageLoader [template]="template" [message]="error"></ng-container>
+        <ng-container *ngIf="!!template; else defaultTemplate">
+            <ng-container messageLoader [template]="template" [error]="error"></ng-container>
+        </ng-container>
+        <ng-template #defaultTemplate>{{ error?.message }}</ng-template>
     `,
 })
 export class NgFormControlErrorsComponent implements OnInit {
@@ -26,7 +34,7 @@ export class NgFormControlErrorsComponent implements OnInit {
 
     @ContentChild(TemplateRef) template: TemplateRef<any>;
 
-    error: string;
+    error: Error;
 
     constructor(private cd: ChangeDetectorRef) {
     }
@@ -38,13 +46,16 @@ export class NgFormControlErrorsComponent implements OnInit {
     }
 
     detectErrors(): void {
-        this.error = '';
+        this.error = <Error>{};
 
         if (this.control.errors && (!!this.control.value || (this.control.dirty || this.control.touched))) {
             for (let err in this.control.errors) {
                 if (this.control.errors.hasOwnProperty(err)) {
                     if (this.errors[err]) {
-                        this.error = this.errors[err];
+                        this.error = {
+                            name: err,
+                            message: this.errors[err]
+                        };
                     }
                 }
             }

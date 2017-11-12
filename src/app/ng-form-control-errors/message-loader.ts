@@ -1,5 +1,7 @@
 import {Directive, EmbeddedViewRef, Input, OnChanges, OnDestroy, TemplateRef, ViewContainerRef} from "@angular/core";
 
+import {Error} from "./ng-form-control-errors.component";
+
 @Directive({
     selector: '[messageLoader]',
 })
@@ -7,7 +9,7 @@ export class MessageLoader implements OnChanges, OnDestroy {
 
     @Input() template: TemplateRef<any>;
 
-    @Input() message: any;
+    @Input() error: Error;
 
     view: EmbeddedViewRef<any>;
 
@@ -20,7 +22,7 @@ export class MessageLoader implements OnChanges, OnDestroy {
         }
 
         this.view = this.viewContainer.createEmbeddedView(this.template, {
-            '\$implicit': this.message,
+            '\$implicit': this.error,
         });
     }
 
