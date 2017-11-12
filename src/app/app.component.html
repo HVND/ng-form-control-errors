@@ -6,7 +6,7 @@
             <control-errors [control]="formGroup.controls['email']"
                             [errors]="{required: 'The field is required to fill!', email: 'Invalid email address!'}">
                 <ng-template let-error>
-                    <small style="color:red">{{ error.name }}</small>
+                    <small style="color:red">{{ error.message }}</small>
                 </ng-template>
             </control-errors>
         </div>
