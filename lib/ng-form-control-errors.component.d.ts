@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, OnInit, TemplateRef } from '@angular/core';
-import { FormControl } from "@angular/forms";
+import { FormControl } from '@angular/forms';
 export interface Error {
     name: string;
     message: string;
@@ -16,4 +16,5 @@ export declare class NgFormControlErrorsComponent implements OnInit {
     constructor(cd: ChangeDetectorRef);
     ngOnInit(): void;
     detectErrors(): void;
+    readonly invalid: boolean;
 }

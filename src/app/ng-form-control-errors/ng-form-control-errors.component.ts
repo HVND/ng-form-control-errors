@@ -7,7 +7,7 @@ import {
     OnInit,
     TemplateRef
 } from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {FormControl} from '@angular/forms';
 
 export interface Error {
     name: string;
@@ -48,8 +48,8 @@ export class NgFormControlErrorsComponent implements OnInit {
     detectErrors(): void {
         this.error = <Error>{};
 
-        if (this.control.errors && (!!this.control.value || (this.control.dirty || this.control.touched))) {
-            for (let err in this.control.errors) {
+        if (this.invalid) {
+            for (const err in this.control.errors) {
                 if (this.control.errors.hasOwnProperty(err)) {
                     if (this.errors[err]) {
                         this.error = {
@@ -62,5 +62,13 @@ export class NgFormControlErrorsComponent implements OnInit {
         }
 
         this.cd.markForCheck();
+    }
+
+    get invalid(): boolean {
+        if (this.control) {
+            return this.control.errors && (!!this.control.value || (this.control.dirty || this.control.touched));
+        } else {
+            return false;
+        }
     }
 }
