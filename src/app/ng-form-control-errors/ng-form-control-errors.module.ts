@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import {NgFormControlErrorsComponent} from './ng-form-control-errors.component';
-import {MessageLoader} from "./message-loader";
 
 @NgModule({
     imports: [
@@ -10,11 +9,9 @@ import {MessageLoader} from "./message-loader";
     ],
     declarations: [
         NgFormControlErrorsComponent,
-        MessageLoader
     ],
     exports: [
-        NgFormControlErrorsComponent,
-        MessageLoader
+        NgFormControlErrorsComponent
     ]
 })
 export class NgFormControlErrorsModule {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 export interface Error {
     name: string;
@@ -11,7 +11,6 @@ export declare class NgFormControlErrorsComponent implements OnInit {
     private cd;
     control: FormControl;
     errors: Errors;
-    template: TemplateRef<any>;
     error: Error;
     constructor(cd: ChangeDetectorRef);
     ngOnInit(): void;

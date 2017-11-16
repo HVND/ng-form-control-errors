@@ -1,12 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChild,
-    Input,
-    OnInit,
-    TemplateRef
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 export interface Error {
@@ -20,10 +12,7 @@ export type Errors = { [error: string]: string };
     selector: 'control-errors,[control-errors]',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <ng-container *ngIf="!!template; else defaultTemplate">
-            <ng-container messageLoader [template]="template" [error]="error"></ng-container>
-        </ng-container>
-        <ng-template #defaultTemplate>{{ error?.message }}</ng-template>
+        <ng-container>{{ error?.message }}</ng-container>
     `,
 })
 export class NgFormControlErrorsComponent implements OnInit {
@@ -31,8 +20,6 @@ export class NgFormControlErrorsComponent implements OnInit {
     @Input() control: FormControl;
 
     @Input() errors: Errors;
-
-    @ContentChild(TemplateRef) template: TemplateRef<any>;
 
     error: Error;
 
