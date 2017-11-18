@@ -1,6 +1,6 @@
 {
   "name": "ng-form-control-errors",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -10,6 +10,10 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "packagr": "ng-packagr -p ng-package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HVND/ng-form-control-errors.git"
   },
   "dependencies": {
     "@angular/animations": "^5.0.0",
