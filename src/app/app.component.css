@@ -1,3 +1,8 @@
 .container {
     padding-top: 30px;
 }
+
+.hint {
+    color: #f00;
+    font-size: 80%;
+}
