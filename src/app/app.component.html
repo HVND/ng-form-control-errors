@@ -1,20 +1,18 @@
 <div class="container">
     <form [formGroup]="formGroup">
-        <div class="form-group">
+        <div class="form-group control-errors-content">
             <label for="email">Email</label>
             <input type="text" class="form-control" id="email" formControlName="email"
-                   [ngClass]="{'is-invalid': emailCtrl.invalid}">
-            <small #emailCtrl control-errors [control]="formGroup.get('email')" class="hint"
+                   controlErrorsInvalid="is-invalid">
+            <small control-errors class="hint"
                    [errors]="{required: 'The field is required to fill!', email: 'Invalid email address!'}">
             </small>
         </div>
-        <div class="form-group has-success">
+        <div class="form-group control-errors-content">
             <label for="phoneNumber">Phone number</label>
             <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber"
-                   [ngClass]="{'is-invalid': phoneNumberCtrl.invalid}">
-            <control-errors #phoneNumberCtrl
-                            [control]="formGroup.get('phoneNumber')" class="hint"
-                            [errors]="{required: 'The field is required to fill!',
+                   controlErrorsInvalid="is-invalid">
+            <control-errors class="hint" [errors]="{required: 'The field is required to fill!',
                              pattern: 'Invalid phone number! (e.g. +91 (123) 456-7890)'}">
             </control-errors>
         </div>

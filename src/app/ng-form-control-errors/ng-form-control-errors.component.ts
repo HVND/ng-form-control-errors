@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Host, Input, OnInit, Optional} from '@angular/core';
 import {FormControl} from '@angular/forms';
+import {NgFormControlErrorsContent} from "./ng-form-control-errors-content";
 
 export interface Error {
     name: string;
@@ -23,13 +24,18 @@ export class NgFormControlErrorsComponent implements OnInit {
 
     error: Error;
 
-    constructor(private cd: ChangeDetectorRef) {
+    constructor(private cd: ChangeDetectorRef,
+                @Optional() @Host() private controlErrorsContent: NgFormControlErrorsContent) {
     }
 
     ngOnInit() {
-        this.detectErrors();
-        this.control.valueChanges.subscribe(() => this.detectErrors());
-        this.control.statusChanges.subscribe(() => this.detectErrors());
+        this.control = this.control ? this.control : this.formControl;
+
+        if (this.control) {
+            this.detectErrors();
+            this.control.valueChanges.subscribe(() => this.detectErrors());
+            this.control.statusChanges.subscribe(() => this.detectErrors());
+        }
     }
 
     detectErrors(): void {
@@ -57,5 +63,9 @@ export class NgFormControlErrorsComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    get formControl(): FormControl | null {
+        return this.controlErrorsContent ? this.controlErrorsContent.formControl : null;
     }
 }

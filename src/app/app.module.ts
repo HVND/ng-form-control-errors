@@ -7,7 +7,7 @@ import {NgFormControlErrorsModule} from "./ng-form-control-errors/ng-form-contro
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
     ],
     imports: [
         BrowserModule,
