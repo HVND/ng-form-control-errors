@@ -27,7 +27,7 @@ export class NgFormControlErrorsInvalid implements OnInit, OnChanges {
     constructor(private element: ElementRef,
                 private renderer: Renderer2,
                 private cdr: ChangeDetectorRef,
-                @Attribute('class') private hasClasses: string,
+                @Optional() @Attribute('class') private hasClasses: string,
                 @Optional() @Host() private controlErrorsContent: NgFormControlErrorsContent) {
     }
 
@@ -52,7 +52,7 @@ export class NgFormControlErrorsInvalid implements OnInit, OnChanges {
 
     update(): void {
         this.classes.forEach((c: string) => {
-            if (!this.hasClasses.includes(c) && this.invalid) {
+            if (!this.hasClass(c) && this.invalid) {
                 this.renderer.addClass(this.element.nativeElement, c);
             } else {
                 this.renderer.removeClass(this.element.nativeElement, c);
@@ -60,6 +60,11 @@ export class NgFormControlErrorsInvalid implements OnInit, OnChanges {
         });
 
         this.cdr.markForCheck();
+    }
+
+    hasClass(className: string): boolean {
+        if (!this.hasClasses) return false;
+        return this.hasClasses.includes(className);
     }
 
     get invalid(): boolean {
