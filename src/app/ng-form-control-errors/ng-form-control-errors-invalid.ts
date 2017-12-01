@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Attribute,
     ChangeDetectorRef,
     Directive,
@@ -6,7 +7,6 @@ import {
     Host,
     Input,
     OnChanges,
-    OnInit,
     Optional,
     Renderer2,
     SimpleChanges
@@ -19,7 +19,7 @@ import {NgFormControlErrorsContent} from "./ng-form-control-errors-content";
     selector: '[controlErrorsInvalid]',
     exportAs: 'controlErrorsInvalid',
 })
-export class NgFormControlErrorsInvalid implements OnInit, OnChanges {
+export class NgFormControlErrorsInvalid implements AfterViewInit, OnChanges {
     @Input() control: FormControl;
 
     classes: string[] = [];
@@ -35,7 +35,7 @@ export class NgFormControlErrorsInvalid implements OnInit, OnChanges {
         this.update();
     }
 
-    ngOnInit(): void {
+    ngAfterViewInit() {
         this.control = this.control ? this.control : this.formControl;
 
         if (this.control) {
