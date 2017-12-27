@@ -7,6 +7,7 @@ import {
     Host,
     Input,
     OnChanges,
+    OnDestroy,
     Optional,
     Renderer2,
     SimpleChanges
@@ -19,10 +20,15 @@ import {NgFormControlErrorsContent} from "./ng-form-control-errors-content";
     selector: '[controlErrorsInvalid]',
     exportAs: 'controlErrorsInvalid',
 })
-export class NgFormControlErrorsInvalid implements AfterViewInit, OnChanges {
+export class NgFormControlErrorsInvalid implements AfterViewInit, OnChanges, OnDestroy {
+
     @Input() control: FormControl;
 
     classes: string[] = [];
+
+    elFormCtrlBlurListener: Function;
+
+    elFormCtrlFocusListener: Function;
 
     constructor(private element: ElementRef,
                 private renderer: Renderer2,
@@ -39,6 +45,13 @@ export class NgFormControlErrorsInvalid implements AfterViewInit, OnChanges {
         this.control = this.control ? this.control : this.formControl;
 
         if (this.control) {
+
+            this.elFormCtrlBlurListener = this.renderer.listen(
+                this.elFormControl, 'blur', () => this.update());
+            this.elFormCtrlFocusListener = this.renderer.listen(
+                this.elFormControl, 'focus', () => this.update());
+
+
             this.control.valueChanges.subscribe(() => this.update());
             this.control.statusChanges.subscribe(() => this.update());
         }
@@ -79,4 +92,26 @@ export class NgFormControlErrorsInvalid implements AfterViewInit, OnChanges {
         return this.controlErrorsContent ? this.controlErrorsContent.formControl : null;
     }
 
+    unbindElFormCtrlBlurListener() {
+        if (this.elFormCtrlBlurListener) {
+            this.elFormCtrlBlurListener();
+            this.elFormCtrlBlurListener = null;
+        }
+    }
+
+    unbindElFormCtrlFocusListener() {
+        if (this.elFormCtrlFocusListener) {
+            this.elFormCtrlFocusListener();
+            this.elFormCtrlFocusListener = null;
+        }
+    }
+
+    get elFormControl() {
+        return this.controlErrorsContent ? this.controlErrorsContent.elFormControl : null;
+    }
+
+    ngOnDestroy(): void {
+        this.unbindElFormCtrlBlurListener();
+        this.unbindElFormCtrlFocusListener();
+    }
 }

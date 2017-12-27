@@ -1,13 +1,17 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Host, Input, OnInit, Optional} from '@angular/core';
+import {
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Host, Input, OnDestroy, Optional,
+    Renderer2
+} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {NgFormControlErrorsContent} from "./ng-form-control-errors-content";
+
+import {NgFormControlErrorsContent} from './ng-form-control-errors-content';
 
 export interface Error {
     name: string;
     message: string;
 }
 
-export type Errors = { [error: string]: string };
+export interface Errors { [error: string]: string; }
 
 @Component({
     selector: 'control-errors,[control-errors]',
@@ -16,7 +20,7 @@ export type Errors = { [error: string]: string };
         <ng-container>{{ error?.message }}</ng-container>
     `,
 })
-export class NgFormControlErrorsComponent implements OnInit {
+export class NgFormControlErrorsComponent implements AfterContentInit, OnDestroy {
 
     @Input() control: FormControl;
 
@@ -24,15 +28,26 @@ export class NgFormControlErrorsComponent implements OnInit {
 
     error: Error;
 
+    elFormCtrlBlurListener: Function;
+
+    elFormCtrlFocusListener: Function;
+
     constructor(private cd: ChangeDetectorRef,
+                private renderer: Renderer2,
                 @Optional() @Host() private controlErrorsContent: NgFormControlErrorsContent) {
     }
 
-    ngOnInit() {
+    ngAfterContentInit() {
         this.control = this.control ? this.control : this.formControl;
 
-        if (this.control) {
+        if (this.control && this.elFormControl) {
             this.detectErrors();
+
+            this.elFormCtrlBlurListener = this.renderer.listen(
+                this.elFormControl, 'blur', () => this.detectErrors());
+            this.elFormCtrlFocusListener = this.renderer.listen(
+                this.elFormControl, 'focus', () => this.detectErrors());
+
             this.control.valueChanges.subscribe(() => this.detectErrors());
             this.control.statusChanges.subscribe(() => this.detectErrors());
         }
@@ -67,5 +82,28 @@ export class NgFormControlErrorsComponent implements OnInit {
 
     get formControl(): FormControl | null {
         return this.controlErrorsContent ? this.controlErrorsContent.formControl : null;
+    }
+
+    get elFormControl() {
+        return this.controlErrorsContent ? this.controlErrorsContent.elFormControl : null;
+    }
+
+    ngOnDestroy(): void {
+        this.unbindElFormCtrlBlurListener();
+        this.unbindElFormCtrlFocusListener();
+    }
+
+    unbindElFormCtrlBlurListener() {
+        if (this.elFormCtrlBlurListener) {
+            this.elFormCtrlBlurListener();
+            this.elFormCtrlBlurListener = null;
+        }
+    }
+
+    unbindElFormCtrlFocusListener() {
+        if (this.elFormCtrlFocusListener) {
+            this.elFormCtrlFocusListener();
+            this.elFormCtrlFocusListener = null;
+        }
     }
 }
