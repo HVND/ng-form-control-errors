@@ -1,11 +1,14 @@
-import {ContentChild, Directive, ElementRef} from '@angular/core';
+import {AfterContentInit, ContentChild, Directive, ElementRef, Input, OnDestroy, Renderer2} from '@angular/core';
 import {FormControl, FormControlDirective, FormControlName, NgModel} from '@angular/forms';
+import {Subject} from 'rxjs/Subject';
 
 @Directive({
     selector: '.control-errors-content',
     exportAs: 'controlErrorsContent',
 })
-export class NgFormControlErrorsContent {
+export class NgFormControlErrorsContent implements AfterContentInit, OnDestroy {
+
+    @Input() checkOnDirty = true;
 
     @ContentChild(FormControlName) _formCtrlName: FormControlName;
 
@@ -18,6 +21,43 @@ export class NgFormControlErrorsContent {
     @ContentChild(FormControlDirective, {read: ElementRef}) _elFormCtrlDir: ElementRef;
 
     @ContentChild(NgModel, {read: ElementRef}) _elNgModel: ElementRef;
+
+    onChange$ = new Subject();
+
+    elFormCtrlBlurListener: Function;
+
+    elFormCtrlFocusListener: Function;
+
+    elFormCtrlInputListener: Function;
+
+    constructor(private renderer: Renderer2) {
+    }
+
+    ngAfterContentInit() {
+        if (!this.elFormControl) {
+            throw new Error(
+                '.control-errors-content must be used with a child [formControl], [ngModel] or [formControlName] directive');
+        }
+
+        this.initOnChange();
+    }
+
+    get invalid(): boolean {
+        if (this.formControl) {
+            return this.formControl.errors && (!this.checkOnDirty || (this.formControl.dirty || this.formControl.touched));
+        } else {
+            return false;
+        }
+    }
+
+    initOnChange() {
+        this.elFormCtrlBlurListener = this.renderer.listen(
+            this.elFormControl, 'blur', (e) => this.onChange$.next(e));
+        this.elFormCtrlFocusListener = this.renderer.listen(
+            this.elFormControl, 'focus', (e) => this.onChange$.next(e));
+        this.elFormCtrlInputListener = this.renderer.listen(
+            this.elFormControl, 'input', (e) => this.onChange$.next(e));
+    }
 
     get formControl(): FormControl | null {
         let _formControl = null;
@@ -49,5 +89,32 @@ export class NgFormControlErrorsContent {
         }
 
         return _elFormControl;
+    }
+
+    unbindElFormCtrlBlurListener() {
+        if (this.elFormCtrlBlurListener) {
+            this.elFormCtrlBlurListener();
+            this.elFormCtrlBlurListener = null;
+        }
+    }
+
+    unbindElFormCtrlFocusListener() {
+        if (this.elFormCtrlFocusListener) {
+            this.elFormCtrlFocusListener();
+            this.elFormCtrlFocusListener = null;
+        }
+    }
+
+    unbindElFormCtrlInputListener() {
+        if (this.elFormCtrlInputListener) {
+            this.elFormCtrlInputListener();
+            this.elFormCtrlInputListener = null;
+        }
+    }
+
+    ngOnDestroy() {
+        this.unbindElFormCtrlBlurListener();
+        this.unbindElFormCtrlFocusListener();
+        this.unbindElFormCtrlInputListener();
     }
 }
